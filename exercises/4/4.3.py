@@ -4,14 +4,14 @@ from sys import argv
 import re
 
 access_template = ['switchport mode access',
-                   'switchport access vlan %s',
+                   'switchport access vlan {}',
                    'switchport nonegotiate',
                    'spanning-tree portfast',
                    'spanning-tree bpduguard enable']
 
 trunk_template = ['switchport trunk encapsulation dot1q',
                   'switchport mode trunk',
-                  'switchport trunk allowed vlan %s']
+                  'switchport trunk allowed vlan {}']
 
 #setting interface modes for input check
 modes = ['access', 'trunk']
@@ -36,5 +36,5 @@ output = dict(zip(modes,[access_template,trunk_template]))
 
 #output
 print 'interface %s' % eth
-for i in range(len(output[inf_mode])):
-    print output[inf_mode][i] % vlans
+for template in output[inf_mode]:
+    print(template.format(vlans))
