@@ -18,8 +18,18 @@ if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",ip_initial):
 octets = ip_initial.split('.')
 
 #print octets
+#преобразуем str в int
 
-#приступим к проверкам
+for i in range (4):
+    octets[i] = int(octets[i])
+
+#приступим к проверке, что каждый октет в диапазоне от 0 до 255
+
+for i in range (4):
+    if not 0 <= octets[i] <= 255:
+        print 'Incorrect IPv4 address'
+        quit()
+
 
 address_type='unused' #делаем тип по умолчанию
 
