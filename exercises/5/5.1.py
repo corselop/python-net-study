@@ -5,31 +5,33 @@ import re
 
 # Проверка корректности адреса и определение его класса
 
-# Инициируем
+# Инициируем pass_OK - если не True, запрашиваем ввод ещё раз
 
-ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
-#верификация регулярным выражением как первый этап - что подсунули хотя бы по виду
-#подходящее.
-if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",ip_initial):
-    print 'ввод неверен'
-    quit()
+pass_OK = False
 
-#готовим данные в к более подробной проверке, а также к другим манипуляциям
-octets = ip_initial.split('.')
-
-#print octets
-#преобразуем str в int
-
-for i in range (4):
-    octets[i] = int(octets[i])
-
-#приступим к проверке, что каждый октет в диапазоне от 0 до 255
-
-for i in range (4):
-    if not 0 <= octets[i] <= 255:
-        print 'Incorrect IPv4 address'
-        quit()
-
+while not pass_OK:
+    ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
+    if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",ip_initial):
+        print 'ввод неверен'
+    else:
+        octets = ip_initial.split('.')
+        for i in range (4):
+            octets[i] = int(octets[i])
+        print octets
+        if not 0 <= octets[0] <= 255:
+            print 'Incorrect IPv4 address'
+            ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
+        elif not 0 <= octets[1] <= 255:
+            print 'Incorrect IPv4 address'
+            ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
+        elif not 0 <= octets[2] <= 255:
+            print 'Incorrect IPv4 address'
+            ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
+        elif not 0 <= octets[3] <= 255:
+            print 'Incorrect IPv4 address'
+            ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
+        else:
+            pass_OK = True
 
 address_type='unused' #делаем тип по умолчанию
 
