@@ -9,6 +9,11 @@ import re
 
 pass_OK = False
 
+# цикл ниже сначала делает проверку регулярным выражением, что ввод
+# хотя бы соответствует виду aaa.bbb.ccc.ddd, то есть есть четыре
+# числа из трёх цифр, разделённые точкой. Затем ввод разбивается
+# на октеты, и каждый октет проверяется принадлежность диапазону от 0 до 255
+
 while not pass_OK:
     ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
     if not re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$",ip_initial):
@@ -20,18 +25,18 @@ while not pass_OK:
         print octets
         if not 0 <= octets[0] <= 255:
             print 'Incorrect IPv4 address'
-            ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
         elif not 0 <= octets[1] <= 255:
             print 'Incorrect IPv4 address'
-            ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
         elif not 0 <= octets[2] <= 255:
             print 'Incorrect IPv4 address'
-            ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
         elif not 0 <= octets[3] <= 255:
             print 'Incorrect IPv4 address'
-            ip_initial = raw_input('Введите IPv4 адрес в формате x.x.x.x: ')
         else:
             pass_OK = True
+
+# else выполняется, если все проверки прошли успешно
+
+# далее переходим к определению типа адреса
 
 address_type='unused' #делаем тип по умолчанию
 
