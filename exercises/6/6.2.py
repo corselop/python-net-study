@@ -20,19 +20,22 @@ ignore = ['duplex','alias','Current configuration']
 for i,file in enumerate(fileNames):
     try:
         with open(fileNames[i],'r') as f:
-            for line in f:
+            with open (fileNames[i][:-4]+'_cleared.txt','w') as fOut:
+                for line in f:
 # зададим переменную, обозначающую успешность проверок
-                ignoreLine=False
-                if line[0]=='!':
-                    ignoreLine=True
+                    ignoreLine=False
+#                    if line[0]=='!':
+#                        ignoreLine=True
 # проверили, что начало там не !
-                if ignoreLine==False:
-                    for word in ignore:
-                        if re.search(word,line):
-                            ignoreLine=True
+                    if ignoreLine==False:
+                        for word in ignore:
+                            if re.search(word,line):
+                                ignoreLine=True
                 
-                if ignoreLine==False:
-                    print line[:-1]
+                    if ignoreLine==False:
+                        fOut.write(line)
+
+
 
     except IOError:
         print ' \n'
