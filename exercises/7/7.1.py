@@ -16,7 +16,7 @@ access_dict = { 'FastEthernet0/12':10,
 
 # функция
 
-def generate_access_config(access):
+def generate_access_config(access,psecurity=False):
     """
     access - словарь access-портов,
     для которых необходимо сгенерировать конфигурацию, вида:
@@ -32,6 +32,10 @@ def generate_access_config(access):
                        'spanning-tree portfast',
                        'spanning-tree bpduguard enable']
 
+    port_security = ['switchport port-security maximum 2',
+                     'switchport port-security violation restrict',
+                     'switchport port-security']
+
     config=[]
 
     for interface in access:
@@ -42,7 +46,10 @@ def generate_access_config(access):
                 config.append(item + '' + str(access[interface]))
             else:
                 config.append(item)
+        if psecurity:
+            for item in port_security:
+                config.append(item)
 
     print config
 
-generate_access_config(access_dict)
+generate_access_config(access_dict,psecurity=True)
