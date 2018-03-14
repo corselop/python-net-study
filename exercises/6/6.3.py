@@ -26,9 +26,8 @@ for i in vlans:
         print 'ввод неверен: ' + i
         quit()
 
-# инициализация списка строк
-
-keys = ['VLAN', 'MAC', 'TYPE', 'INTERFACE']
+# открываем файл на чтение и нчинаем манипуляции
+# идея такая: сделать список списков с содержимым строк
 
 try:
     with open ('CAM_table.txt','r') as f:
@@ -52,10 +51,14 @@ try:
 #    dictionary = dict(zip(d,strings))
 #сделали, теперь можем сортировать
     strings_sorted = sorted(strings, key=itemgetter(0))
+#и теперь сделаем вывод только нужных нам VLAN, которые указали на входе
+    for i in vlans:
+        for string in strings_sorted:
+            if re.match(i,string[0]):
+                print "%-15s %-15s %-15s" % (string[0],string[1],string[3])   
     
 except IOError:
     print ' \n'
     print 'no such file: CAM_table.txt'
 
 
-print strings
