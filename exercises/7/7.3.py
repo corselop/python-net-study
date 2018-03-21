@@ -29,47 +29,54 @@ def get_int_vlan_map(filename):
                 Ethernets.append(line.split()[1])
 # перемещаемся в начало файла
         file.seek(0)
-# создаём словарь, где ключи - интерфейсы, значения - их конфигурация
+# создаём словарь, где ключи - интерфейсы, значения - их конфигурация,
+# которая пока что пустая
         overall_dict=dict.fromkeys(Ethernets, None)
-# запишем конфигурацию порта в значения
+# запишем конфигурацию порта в значения словаря
         isInterface = False
         interface=''
         ifconfig=[]
         for line in file:
-            if re.search('Ethernet',line):
+# если нашли строку с Ethernet, то готовимся записывать конфигурацию
+# во временный список ifconfig
+            if line.find('Ethernet')!=-1:
                 isInterface = True
                 interface=line.split()[1]
-                print interface
+#                print interface
+# если натыкаемся на !, то записываем конфигурацию !
+# и сбрасываем состояние записи
             elif isInterface and line.startswith('!'):
                 isInterface = False
                 overall_dict[interface]=ifconfig
                 ifconfig=[]
+# а здесь сама запись тех строк, что идут до !
             elif isInterface:
                 ifconfig.append(line[1:-1])
-# теперь нужно выбрать access-порты и trunk-порты
+# теперь можно выбрать access-порты и trunk-порты
 # открытый файл нас больше не интересует
 
-    for key in overall_dict:
-        print overall_dict[key]                        
-                
+    access_list=[]
+    trunk_list=[]
+
 #    print overall_dict
-    
-#    config_dict=dict.fromkeys(trunk_dict.keys(), None)
-
-#    for interface in trunk_dict:
-#        config.append('interface ' + interface)
-#        print access[interface]
-#        config_local=[]
-#        for item in trunk_template:
-#            if re.search('allowed',item):
-#                config_local.append(item + ' ' + ' '.join(str(i) for i in trunk_dict[interface]))
-#            else:
-#                config_local.append(item)
-#        if psecurity:
-#            for item in port_security:
-#                config_local.append(item)
-#        config_dict[interface]=config_local
-
-#    print config_dict
+# выбираем по наличию ключевого слова access или trunk
+# в конфигурации интерфейса
+    for key in overall_dict:
+#        print overall_dict[key]                        
+        if str(overall_dict[key]).find('access')!=-1:
+            access_list.append(key)
+        if str(overall_dict[key]).find('trunk')!=-1:
+            trunk_list.append(key)
+#    print access_list
+#    print trunk_list
+# теперь нужно забрать номера VLAN и засунуть их в итоговые словари
+    access_dict=dict.fromkeys(access_list, None)
+    trunk_dict=dict.fromkeys(trunk_list, None)
+    for interface in access_list:
+        access_dict[interface]=re.findall('vlan [0-9]{1,4}',str(overall_dict[interface]))[0].replace('vlan ','')
+    for interface in trunk_list:
+        trunk_dict[interface]=re.findall('vlan .*?\'',str(overall_dict[interface]))[0][:-1].replace('vlan ','')
+    print access_dict
+    print trunk_dict
 
 get_int_vlan_map('config_sw1.txt')
