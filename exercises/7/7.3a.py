@@ -67,8 +67,6 @@ def get_int_vlan_map(filename):
             access_list.append(key)
         if str(overall_dict[key]).find('trunk')!=-1:
             trunk_list.append(key)
-        else:
-            native_list.append(key)
 #    print access_list
 #    print trunk_list
 
